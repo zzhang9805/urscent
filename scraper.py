@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
 
 # Switch to Chinese website instead
 import re
@@ -16,16 +14,10 @@ from bs4 import BeautifulSoup # Used to parse the HTML content of web pages
 from fake_useragent import UserAgent
 
 
-# In[2]:
-
-
 def read_data(filename):
     with open(filename) as f:
         lines = f.read().split(',')
     return lines
-
-
-# In[3]:
 
 
 def get_html(url):
@@ -46,9 +38,6 @@ def get_html(url):
         print(e) # catastrophic error. bail.
         return None
     return response
-
-
-# In[4]:
 
 
 def get_brand_urls():
@@ -89,9 +78,6 @@ def get_brand_urls():
     return brand_urls, brand_names
 
 
-# In[7]:
-
-
 def scrape_first_page(brand_urls, range_start, range_end):
     """
     Need to go through each brand_url, scrape the first page, then return all other page_urls.
@@ -124,9 +110,6 @@ def scrape_first_page(brand_urls, range_start, range_end):
     print ("Done writing perfume urls to csv! Congrats! Save returned pages_list!")
 
 
-# In[9]:
-
-
 def get_url_list(filename):
     """Convert a csv file with \r\n delimiter to a list of strings
 
@@ -139,9 +122,6 @@ def get_url_list(filename):
         data_line = line.rstrip().split('\r\n')
         data.append(data_line[0])
     return data
-
-
-# In[12]:
 
 
 def scrape_other_pages(pages_list):
@@ -171,9 +151,6 @@ def scrape_other_pages(pages_list):
             print("Take a nap for 8 minutes...Please don't block me!!!")
             time.sleep(60*8)
     print("Done writing perfume urls to csv!")
-
-
-# In[5]:
 
 
 if __name__ == '__main__':
