@@ -1,2 +1,2 @@
 # urscent
-Perfume recommender of notes or accords
+Recommending notes or accords of perfumes
