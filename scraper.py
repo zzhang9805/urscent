@@ -202,7 +202,6 @@ with open('data/brand_names.csv','w') as resultFile:
     for key, value in brand_names.items():
         wr.writerow([key.encode('utf-8'), value.encode('utf-8')])
 brand_urls = read_data('data/brand_urls.csv')
-n1, n2 = sys.argv[1], sys.argv[2]
 pages_list = scrape_first_page(brand_urls, 0, 372)
 print("Finished writing csv file...")
 # after brands are scraped...
