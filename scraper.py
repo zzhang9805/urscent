@@ -208,13 +208,15 @@ print("Finished writing csv file...")
 print("Getting pages list...")
 pages = get_url_list('data/pages.csv')
 for p in pages:
-    pages.remove("")
+    if p == "" :
+        pages.remove(p)
 print("Scraping other pages for perfume urls...")
 scrape_other_pages(pages)
 print("Converting perfumes csv file to a list...")
 perfumes = get_url_list('data/perfumes_2.csv')
 for p in perfumes:
-    perfumes.remove("")
+    if perfumes == "" :
+        perfumes.remove(p)
 print("Inserting perfumes html to mysqldb...")
 scrape_perfume_page(perfumes)
 print("Woohoo, done! Congrats!")
