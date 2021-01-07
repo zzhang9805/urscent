@@ -12,6 +12,8 @@ import sys
 from urllib3 import *
 from bs4 import BeautifulSoup # Used to parse the HTML content of web pages
 from fake_useragent import UserAgent
+import mysql.connector
+from datetime import datetime
 
 
 def read_data(filename):
@@ -153,6 +155,42 @@ def scrape_other_pages(pages_list):
     print("Done writing perfume urls to csv!")
 
 
+def scrape_perfume_page(perfume_urls):
+    """Scrape one page html and store into Mysqldb
+
+    Input: list of perfume urls
+    Output: key, url, html, stored into Mysqldb
+    """
+    db_connection = mysql.connector.connect(
+    host="urscentdb.carqdqoxxxwl.ap-northeast-1.rds.amazonaws.com",
+    user="admin",
+    passwd="zmlzzraa",
+    port="3306"
+    database="db1",
+    charset='utf8mb4',
+    collation = 'utf8mb4_general_ci'
+    )
+    mySql_insert_query = """INSERT INTO perfume_html (nowdate, url, html) VALUES (%s, %s, %s) """
+    count = 0
+    for url in perfume_urls:
+        html_text = get_html(url).text
+        if html_text == None:
+            print("Get HTML break at #{} url.".format(count))
+            break
+        current_Date = datetime.now()
+        formatted_date = current_Date.strftime('%Y-%m-%d %H:%M:%S:%f')
+        insert_tuple = (formatted_date,url,html_text)
+        db_cursor = db_connection.cursor()
+        db_cursor.execute(mySql_insert_query, insert_tuple)
+        db_cursor.close()
+        db_connection.commit()
+        count += 1
+        if count % 100 == 0:
+            print("Scraped {} pages html...".format(count))
+    db_connection.close()
+    print("MySQL connection is closed")
+
+
 if __name__ == '__main__':
     brand_urls, brand_names = get_brand_urls()
 print("Writing csv file...")
@@ -164,7 +202,8 @@ with open('data/brand_names.csv','w') as resultFile:
     for key, value in brand_names.items():
         wr.writerow([key.encode('utf-8'), value.encode('utf-8')])
 brand_urls = read_data('data/brand_urls.csv')
-pages_list = scrape_first_page(brand_urls, 0, 744)
+n1, n2 = sys.argv[1], sys.argv[2]
+pages_list = scrape_first_page(brand_urls, 0, 372)
 print("Finished writing csv file...")
 # after brands are scraped...
 print("Getting pages list...")
@@ -177,4 +216,7 @@ print("Converting perfumes csv file to a list...")
 perfumes = get_url_list('data/perfumes_2.csv')
 for p in perfumes:
     perfumes.remove("")
+print("Inserting perfumes html to mysqldb...")
+scrape_perfume_page(perfumes)
+print("Woohoo, done! Congrats!")
 
