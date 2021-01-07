@@ -165,7 +165,7 @@ def scrape_perfume_page(perfume_urls):
     host="urscentdb.carqdqoxxxwl.ap-northeast-1.rds.amazonaws.com",
     user="admin",
     passwd="zmlzzraa",
-    port="3306"
+    port="3306",
     database="db1",
     charset='utf8mb4',
     collation = 'utf8mb4_general_ci'
