@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
-
 
 def get_html(url):
     ua = UserAgent()
@@ -24,9 +22,6 @@ def get_html(url):
     return response
 
 
-# In[ ]:
-
-
 if __name__ == '__main__':
     db_connection = mysql.connector.connect(
     host="urscentdb.carqdqoxxxwl.ap-northeast-1.rds.amazonaws.com",
@@ -38,7 +33,7 @@ if __name__ == '__main__':
     collation = 'utf8mb4_general_ci'
     )
     cursor_query = db_connection.cursor(buffered=True)
-    query = ("SELECT distinct url FROM perfume_html")
+    query = ("SELECT distinct url FROM (SELECT url FROM perfume_html limit 4814) tmp") #28885
     cursor_query.execute(query)
     records = cursor_query.fetchall()
     cursor_query.close()
