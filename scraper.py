@@ -187,6 +187,7 @@ def scrape_perfume_page(perfume_urls):
         count += 1
         if count % 100 == 0:
             print("Scraped {} pages html...".format(count))
+        time.sleep(5) # In case I got blocked
     db_connection.close()
     print("MySQL connection is closed")
 
