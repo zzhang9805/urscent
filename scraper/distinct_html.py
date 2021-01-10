@@ -59,7 +59,7 @@ if __name__ == '__main__':
             break
         current_Date = datetime.now()
         formatted_date = current_Date.strftime('%Y-%m-%d %H:%M:%S:%f')
-        insert_tuple = (formatted_date,url,html_text)
+        insert_tuple = (formatted_date,record[0],html_text)
         db_cursor = db_connection.cursor()
         db_cursor.execute(mySql_insert_query, insert_tuple)
         db_cursor.close()
