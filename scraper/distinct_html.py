@@ -1,6 +1,18 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+# Switch to Chinese website instead
+import re
+import os
+import csv
+import requests
+import time
+import sys
+from urllib3 import *
+from bs4 import BeautifulSoup # Used to parse the HTML content of web pages
+from fake_useragent import UserAgent
+import mysql.connector
+from datetime import datetime
 
 def get_html(url):
     ua = UserAgent()
