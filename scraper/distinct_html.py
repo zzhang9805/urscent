@@ -53,7 +53,7 @@ if __name__ == '__main__':
     count = 0
     print("Inserting perfumes html to mysqldb...")
     for record in records:
-        html_text = get_html(record).text
+        html_text = get_html(record[0]).text
         if html_text == None:
             print("Get HTML break at #{} url.".format(count))
             break
