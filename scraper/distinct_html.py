@@ -75,7 +75,7 @@ if __name__ == '__main__':
             print("Get HTML break at #{} url.".format(count))
             break
         db_cursor = db_connection.cursor()
-        db_cursor.execute(mySql_update_query, (record[0]))
+        db_cursor.execute(mySql_update_query, (record[0],))
         db_cursor.close()
         db_connection.commit()
         current_Date = datetime.now()
