@@ -58,7 +58,7 @@ if __name__ == '__main__':
     print("Inserting perfumes html to mysqldb...")
     while True:
         cursor_query = db_connection.cursor()
-        cursor_query.execute(query)
+        cursor_query.execute(mySql_select_query)
         record = cursor_query.fetchone()
         cursor_query.close()
         res = get_html(record[0])
