@@ -57,11 +57,11 @@ if __name__ == '__main__':
     collation = 'utf8mb4_general_ci'
     )
     cursor_query = db_connection.cursor(buffered=True)
-    query = ("SELECT distinct url FROM (SELECT url FROM perfume_html where html_status = 0) tmp") #28885
+    query = ("SELECT distinct url FROM (SELECT url FROM pool1 where html_status = 0) tmp") #28885
     cursor_query.execute(query)
     records = cursor_query.fetchall()
     cursor_query.close()
-    mySql_update_query = """ UPDATE perfume_html SET html_status = 1 WHERE url = %s """
+    mySql_update_query = """ UPDATE pool1 SET html_status = 1 WHERE url = %s """
     mySql_insert_query = """INSERT INTO perfume_html_distinct (nowdate, url, html) VALUES (%s, %s, %s) """
     count = 0
     print("Inserting perfumes html to mysqldb...")
