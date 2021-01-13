@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
 
 
 # Switch to Chinese website instead
@@ -18,7 +17,6 @@ import mysql.connector
 from datetime import datetime
 
 
-# In[4]:
 
 
 def get_ajax(url):
@@ -32,9 +30,7 @@ def get_ajax(url):
     return response
 
 
-# In[ ]:
-
-
+        
 if __name__ == '__main__':
     db_connection = mysql.connector.connect(
     host="urscentdb.carqdqoxxxwl.ap-northeast-1.rds.amazonaws.com",
@@ -45,16 +41,16 @@ if __name__ == '__main__':
     charset='utf8mb4',
     collation = 'utf8mb4_general_ci'
     )
-    cursor_query = db_connection.cursor(buffered=True)
-    query = ("SELECT distinct url FROM (SELECT url FROM pool1 where ajax_status = 0) tmp") #28885
-    cursor_query.execute(query)
-    records = cursor_query.fetchall()
-    cursor_query.close()
+    mySql_select_query = ("SELECT url FROM pool1 where ajax_status = 0 limit 1") #28885
     mySql_update_query = """ UPDATE pool1 SET ajax_status = 1 WHERE url = %s """
-    mySql_insert_query = """ INSERT INTO perfume_ajax_distinct (nowdate, url, ajax) VALUES (%s, %s, %s) """
+    mySql_insert_query = """INSERT INTO perfume_ajax_distinct (nowdate, url, ajax) VALUES (%s, %s, %s) """
     count = 0
     print("Inserting perfumes ajax to mysqldb...")
-    for record in records:
+    while True:
+        cursor_query = db_connection.cursor()
+        cursor_query.execute(query)
+        record = cursor_query.fetchone()
+        cursor_query.close()
         res = get_ajax(record[0])
         if res == 1:
             print("Blocked at #{} url...".format(count))
