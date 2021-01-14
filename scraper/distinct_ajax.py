@@ -63,7 +63,7 @@ if __name__ == '__main__':
         scent_text = ''
         if res['mainodor']:
             for i in res['mainodor']:
-                num = i['cnt']
+                num = str(i['cnt'])
                 type_ = i['uoodor']
                 scent_text += type_+num+'#'
         scent_text = scent_text.rstrip('#')
