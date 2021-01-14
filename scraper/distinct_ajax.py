@@ -60,9 +60,16 @@ if __name__ == '__main__':
         db_cursor.close()
         db_connection.commit()
         res = res.json()
+        scent_text = ''
+        if res['mainodor']:
+            for i in res['mainodor']:
+                num = i['cnt']
+                type_ = i['uoodor']
+                scent_text += type_+num+'#'
+        scent_text = scent_text.rstrip('#')
         current_Date = datetime.now()
         formatted_date = current_Date.strftime('%Y-%m-%d %H:%M:%S:%f')
-        insert_tuple = (formatted_date,record[0],res)
+        insert_tuple = (formatted_date,record[0],scent_text)
         db_cursor = db_connection.cursor()
         db_cursor.execute(mySql_insert_query, insert_tuple)
         db_cursor.close()
