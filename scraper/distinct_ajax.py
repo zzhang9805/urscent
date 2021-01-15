@@ -20,7 +20,7 @@ from datetime import datetime
 
 
 def get_ajax(url):
-    ajaxport = ''.join(re.findall(r"[0-9]+",url,re.S))
+    ajaxport = ''.join(re.findall(r"[0-9]+",url,re.S))[0:6]
     url_info = "https://www.nosetime.com/app/item.php?id={}".format(ajaxport)
     ua = UserAgent()
     headers = {'User-Agent': ua.random}
