@@ -48,7 +48,7 @@ def get_attributes(url1,html1):
     attributes['item_name'] = soup.find('h1').text
     attributes['url'] = url
     perfume_text = soup.find('ul', {'class': 'item_info'}).get_text()
-    if "前调" in perfume_text:
+    if "前调" in perfume_text and "中调" in perfume_text and "后调" in perfume_text: #any of the three not presented then regard as insignificant data
         if "属性" in perfume_text or "标签" in perfume_text or "调香师" in perfume_text:
             attributes['topnotes'] = perfume_text[perfume_text.index("前调")+3:perfume_text.index("中调")].split()
             attributes['heartnotes'] = perfume_text[perfume_text.index("中调")+3:perfume_text.index("后调")].split()
