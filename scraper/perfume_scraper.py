@@ -135,7 +135,7 @@ if __name__ == '__main__':
     collation = 'utf8mb4_general_ci'
     )
     cursor_query = db_connection.cursor()
-    query = ("SELECT url, html FROM perfume_html_distinct order by url limit 9100")
+    query = ("SELECT url, html FROM perfume_html_distinct order by url limit 4550")
     cursor_query.execute(query)
     records = cursor_query.fetchall()
     cursor_query.close()
