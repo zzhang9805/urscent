@@ -80,12 +80,12 @@ def get_comments(url1,html1):
     url = url1
     soup = BeautifulSoup(html, 'html.parser')
     attributes1 = {'comments': '', 'perfume_id': '', 'url': '', 'commenter_lw': '', 'comment_votes': ''}
+    attributes1['url'] = url
+    attributes1['perfume_id'] = ''.join(re.findall(r"[0-9]+",url,re.S))[0:6]
     count = 0
     if soup.find('div', {'class': 'hfshow'}) != None:
         for discuss in soup.find_all('div', {'class': 'hfshow'}):
             attributes1['comments'] = attributes1['comments'] + discuss.text + '#'
-            attributes1['perfume_id'] = re.findall(r'(/[0-9]*-)', url)[0][1:-1]
-            attributes1['url'] = url
         for discuss in soup.find_all('div', {'class': 'user'}):
             ct = 0
             for d in discuss.contents:
@@ -114,7 +114,7 @@ def get_ratings(url1,html1):
     soup = BeautifulSoup(html, 'html.parser')
     attributes2 = {'url': '', 'perfume_id': '', 'score': '', 'votes': '', 'score_distribution': '', 'longevity': ''}
     attributes2['url'] = url
-    attributes2['perfume_id'] = re.findall(r'(/[0-9]*-)', url)[0][1:-1]
+    attributes2['perfume_id'] = ''.join(re.findall(r"[0-9]+",url,re.S))[0:6]
     if '评分人数过少' not in soup.find('ul', {'class': 'item_score'}).text:
         attributes2['score'] = soup.find('ul', {'class': 'item_score'}).find('span', {'class': 'score'}).text.rstrip()
         attributes2['votes'] = ''.join(re.findall('[0-9]+', soup.find('ul', {'class': 'item_score'}).find('span', {'class': 'people'}).text))
