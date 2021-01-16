@@ -49,9 +49,14 @@ def get_attributes(url1,html1):
     attributes['url'] = url
     perfume_text = soup.find('ul', {'class': 'item_info'}).get_text()
     if "前调" in perfume_text:
-        attributes['topnotes'] = perfume_text[perfume_text.index("前调")+3:perfume_text.index("中调")].split()
-        attributes['heartnotes'] = perfume_text[perfume_text.index("中调")+3:perfume_text.index("后调")].split()
-        attributes['basenotes'] = perfume_text[perfume_text.index("后调")+3:perfume_text.index("属性")].split()
+        if "属性" in perfume_text or "标签" in perfume_text or "调香师" in perfume_text:
+            attributes['topnotes'] = perfume_text[perfume_text.index("前调")+3:perfume_text.index("中调")].split()
+            attributes['heartnotes'] = perfume_text[perfume_text.index("中调")+3:perfume_text.index("后调")].split()
+            attributes['basenotes'] = perfume_text[perfume_text.index("后调")+3:(perfume_text.index("：",perfume_text.index("后调：")+3)-3)].split()
+        else:  
+            attributes['topnotes'] = perfume_text[perfume_text.index("前调")+3:perfume_text.index("中调")].split()
+            attributes['heartnotes'] = perfume_text[perfume_text.index("中调")+3:perfume_text.index("后调")].split()
+            attributes['basenotes'] = perfume_text[perfume_text.index("后调")+3:].split()
     attributes['description'] = soup.find('li', {'class': 'desc'}).find('div', {'class': 'showmore'}).find('p').get_text().rstrip()
     attributes['note'] = attributes['note'].rstrip('#')
     attributes['gender'] = attributes['gender'].rstrip('#')
@@ -144,6 +149,7 @@ if __name__ == '__main__':
     count = 0
     for record in records:
     ## Parse perfume attributes
+        print(record[0])
         attributes = get_attributes(record[0],record[1])
         current_Date = datetime.now()
         formatted_date = current_Date.strftime('%Y-%m-%d %H:%M:%S:%f')
@@ -162,6 +168,7 @@ if __name__ == '__main__':
     print('Parsing comments and store into mysqldb...')
     count = 0
     for record in records:
+        print(record[0])
         comments = get_comments(record[0],record[1])
         if comments != None:
             current_Date = datetime.now()
@@ -181,6 +188,7 @@ if __name__ == '__main__':
     print('Parsing ratings and store into mysqldb...')
     count = 0
     for record in records:
+        print(record[0])
         ratings = get_ratings(record[0],record[1])
         current_Date = datetime.now()
         formatted_date = current_Date.strftime('%Y-%m-%d %H:%M:%S:%f')
