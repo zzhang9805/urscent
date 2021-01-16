@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
 
 import re
 import os
@@ -14,9 +12,6 @@ import requests
 import mysql.connector
 import time
 from datetime import datetime
-
-
-# In[2]:
 
 
 def get_attributes(url1,html1):
@@ -67,9 +62,6 @@ def get_attributes(url1,html1):
     return attributes
 
 
-# In[3]:
-
-
 def get_comments(url1,html1):
     """
     Input: perfume webpage html content
@@ -100,9 +92,6 @@ def get_comments(url1,html1):
     return attributes1
 
 
-# In[4]:
-
-
 def get_ratings(url1,html1):
     """
     Input: perfume webpage html content
@@ -126,9 +115,6 @@ def get_ratings(url1,html1):
     return attributes2
 
 
-# In[8]:
-
-
 if __name__ == '__main__':
     db_connection = mysql.connector.connect(
     host="urscentdb.carqdqoxxxwl.ap-northeast-1.rds.amazonaws.com",
@@ -139,15 +125,18 @@ if __name__ == '__main__':
     charset='utf8mb4',
     collation = 'utf8mb4_general_ci'
     )
-    cursor_query = db_connection.cursor()
-    query = ("SELECT url, html FROM perfume_html_distinct order by url limit 4550")
-    cursor_query.execute(query)
-    records = cursor_query.fetchall()
-    cursor_query.close()
+    select_query = ("SELECT url, html FROM perfume_html_distinct where parse_status = 0 limit 1")
+    mySql_update_query = """ UPDATE perfume_html_distinct SET parse_status = 1 WHERE url = %s """
     mySql_insert_query = """INSERT INTO attributes (nowdate, brand, theme, note, gender, perfumer, tags, perfume_id, item_name, url, topnotes, heartnotes, basenotes, description) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) """
+    mySql_insert_query1 = """INSERT INTO comments VALUES (%s, %s, %s, %s, %s, %s) """
+    mySql_insert_query2 = """INSERT INTO ratings VALUES (%s, %s, %s, %s, %s, %s, %s) """
     print("Parsing attributes and store into mysqldb...")
     count = 0
-    for record in records:
+    while True:
+        cursor_query = db_connection.cursor()
+        cursor_query.execute(select_query)
+        record = cursor_query.fetchone()
+        cursor_query.close()
     ## Parse perfume attributes
         print(record[0])
         attributes = get_attributes(record[0],record[1])
@@ -159,16 +148,7 @@ if __name__ == '__main__':
         cursor_insert.execute(mySql_insert_query, insert_tuple)
         cursor_insert.close()
         db_connection.commit()
-        count += 1
-        if count % 10 == 0:
-            print("Inserted {} attributes".format(count))
-    print("Done! You got all the attributes!")
-    ### Parse perfume comments
-    mySql_insert_query1 = """INSERT INTO comments VALUES (%s, %s, %s, %s, %s, %s) """
-    print('Parsing comments and store into mysqldb...')
-    count = 0
-    for record in records:
-        print(record[0])
+    ## Parse perfume comments
         comments = get_comments(record[0],record[1])
         if comments != None:
             current_Date = datetime.now()
@@ -179,16 +159,6 @@ if __name__ == '__main__':
             cursor_insert.execute(mySql_insert_query1, insert_tuple)
             cursor_insert.close()
             db_connection.commit()
-            count += 1
-            if count % 10 == 0:
-                print("Inserted {} comments".format(count))
-    print('Done! You got all the comments!')
-    ### Parse perfume ratings
-    mySql_insert_query2 = """INSERT INTO ratings VALUES (%s, %s, %s, %s, %s, %s, %s) """
-    print('Parsing ratings and store into mysqldb...')
-    count = 0
-    for record in records:
-        print(record[0])
         ratings = get_ratings(record[0],record[1])
         current_Date = datetime.now()
         formatted_date = current_Date.strftime('%Y-%m-%d %H:%M:%S:%f')
@@ -198,16 +168,16 @@ if __name__ == '__main__':
         cursor_insert.execute(mySql_insert_query2, insert_tuple)
         cursor_insert.close()
         db_connection.commit()
+        db_cursor = db_connection.cursor()
+        db_cursor.execute(mySql_update_query, (record[0],))
+        db_cursor.close()
+        db_connection.commit()
         count += 1
         if count % 10 == 0:
-            print("Inserted {} ratings".format(count))
-    print('Done! You got all the ratings!')
+            print("parsed {} html".format(count))
+    print('Done! You parsed everything!')
     print('This instance has finished its task!')
     db_connection.close()
-
-
-# In[ ]:
-
 
 
 
